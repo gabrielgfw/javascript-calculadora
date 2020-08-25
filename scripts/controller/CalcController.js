@@ -13,13 +13,17 @@ class CalcController {
 
     initialize() {
 
+        this.setDisplayDateTime();
         // this function will repeat the arguments every given interval. //
         setInterval(() => {
-
-            this.displayDate = this.currentDate.toLocaleDateString(this._locale);
-            this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
-            
+            this.setDisplayDateTime();
         }, 1000);
+    }
+
+    setDisplayDateTime() {
+        // display current date and time
+        this.displayDate = this.currentDate.toLocaleDateString(this._locale);
+        this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
     }
 
     // displayTime GET & SET // 
