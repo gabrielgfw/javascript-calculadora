@@ -2,38 +2,53 @@ class CalcController {
 
     constructor() {
         // _ = private attributes. //
-        this._displayCalc = "0";
-        this._currentDate;
+        // selecting objects from the html file. //
+        this._locale = "pt-BR"
+        this._displayCalcEl = document.querySelector("#display");
+        this._dateEl = document.querySelector("#data");
+        this._timeEl = document.querySelector("#hora");
+
         this.initialize();
     }
 
     initialize() {
-        // selecting objects from the html file. //
-        let displayCalcEl = document.querySelector("#display");
-        let dateEl = document.querySelector("#data");
-        let timeEl = document.querySelector("#hora");
 
-        // innerHTML = changes the value inside the HTML tag. //
-        displayCalcEl.innerHTML = "1234";
-        dateEl.innerHTML = "20/02/2020"
-        timeEl.innerHTML = "12:30"
+        // this function will repeat the arguments every given interval. //
+        setInterval(() => {
+
+            this.displayDate = this.currentDate.toLocaleDateString(this._locale);
+            this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+            
+        }, 1000);
     }
 
-    // return displayCalc value. //
+    // displayTime GET & SET // 
+    get displayTime() {
+        return this._timeEl.innerHTML;
+    }
+    set displayTime(value) {
+        this._timeEl.innerHTML = value;
+    }
+
+    // displayDate GET & SET //
+    get displayDate() {
+        return this._dateEl.innerHTML;
+    }
+    set displayDate(value) {
+        this._dateEl.innerHTML = value;
+    }
+
+    // displayCalc GET & SET //
     get displayCalc() {
-        return this._displayCalc;
+        return this._displayCalcEl.innerHTML;
     }
-    // changes displayCalc value. //
     set displayCalc(value) {
-        this._displayCalc = value;
+        this._displayCalcEl.innerHTML = value;
     }
 
-    // return currentDate value. //
     get currentDate() {
-        return this._currentDate;
+        return new Date();
     }
-    // changes currentDate value. //
-    set currentDate(value) {
-        this._currentDate = value;
-    }
+
+
 }
