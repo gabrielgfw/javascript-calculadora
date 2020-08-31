@@ -65,6 +65,45 @@ class CalcController {
         return (['+', '-', '*', '/'].indexOf(value) > -1);
     }
 
+    pushOperation(value) {
+        
+        this._operation.push(value);
+
+        // In case of the operation already has 2 values and 1 signal operator. //
+
+        if(this._operation.length > 3) {
+            this.calc();
+        }
+    }
+
+    calc() {
+        // The last value will be pop out of the operation array //
+        // to be used after the result of the current operation. //
+        let lastValue = this._operation.pop();
+        // Join will concatenate our current array into one String. //
+        // Eval returns the result, following the mathematical logic inside the variable. //
+        let result = eval(this._operation.join(""));
+
+        // Then the operation array needs to be rebuild. //
+        this._operation = [result, lastValue];
+        // Refreshing display with the current result. //
+        this.setLastNumberToDisplay();
+    }
+
+    setLastNumberToDisplay() {
+
+        let lastNumber;
+
+        for(let i = this._operation.length - 1; i >= 0; i--) {
+            if(!this.isOperator(this._operation[i])) {
+                lastNumber = this._operation[i];
+                break;
+            }
+        }
+
+        this.displayCalc = lastNumber;
+    }
+
     ////////////////////////////
     // Buttons Configuration. //
     ////////////////////////////
@@ -83,21 +122,22 @@ class CalcController {
 
             // In case of a new number. //
             } else {
-                this._operation.push(value);
+                this.pushOperation(value);
+                this.setLastNumberToDisplay();
             }
             
         } else {
             // If the current value it's a signal operator. //
             if(this.isOperator(value)) {
 
-                this._operation.push(value);
+                this.pushOperation(value);
             } else {
                 // Parse the value to concatenate both values. //
                 let newValue = this.getLastOperation().toString() + value.toString();
                 this.setLastOperation(newValue);
+                this.setLastNumberToDisplay();
             }
         }
-        console.log(this._operation);
     }
 
     setError() {
