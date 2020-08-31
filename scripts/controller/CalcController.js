@@ -1,34 +1,41 @@
 class CalcController {
 
     constructor() {
-        // _ = private attributes. //
-        // selecting objects from the html file. //
+        // Selecting objects from the html file. //
+        this._displayCalcEl = document.querySelector("#display");
+        this._dateEl = document.querySelector("#data");
+        this._timeEl = document.querySelector("#hora");
+
+        // Date Locale config for pt-br. //
         this._locale = "pt-BR"
         this._dateFormtConfig = {
             day: "2-digit",
             month: "long",
             year: "numeric"
         }
-        this._displayCalcEl = document.querySelector("#display");
-        this._dateEl = document.querySelector("#data");
-        this._timeEl = document.querySelector("#hora");
+
+        // Array of operations. //
         this._operation = [];
+        // Init buttons events. //
         this.initButtonsEvents();
-        this.initialize();
+        // Init hour and date real-time configs. //
+    //    this.initialize();
+        // Obs.: _ means private attributes. //
     }
 
+    /*
     initialize() {
 
         this.setDisplayDateTime();
-        // this function will repeat the arguments every given interval. //
+        // Repeat the arguments every given interval. //
         setInterval(() => {
             this.setDisplayDateTime();
         }, 1000);
     }
-
-    // takes the element, all the events that we want to apply by eventListener. //
+*/
+    // Applies to the element, all needed events. //
     addEventListenerAll(element, events, fn) {
-        // this function split some string, using the parameter as the point of split. // 
+        // Split some string, using the parameter as the point of split. // 
         events.split(' ').forEach(event => {
             element.addEventListener(event, fn);
         });
@@ -42,12 +49,48 @@ class CalcController {
         this._operation.pop();
     }
 
+    // Return the last position inside operation's array. //
     getLastOperation() {
         return this._operation[(this._operation.length - 1)]; 
     }
 
+    setLastOperation(value) {
+        let n = (this._operation.length - 1);
+        this._operation[n] = value;
+    }
+
+    isOperator(value) {
+        // Checking if the current value has some index inside the bellow array. //
+        // If so, this function will return true. //
+        return (['+', '-', '*', '/'].indexOf(value) > -1);
+    }
+
+    ////////////////////////////
+    // Buttons Configuration. //
+    ////////////////////////////
     addOperation(value) {
-        this._operation.push(value);
+        // Every new input will pass this function. //
+        // This checks if the new value it's a number or a signal operator. //
+
+        // Checks if the last operator before is NOT a number. //
+        if(isNaN(this.getLastOperation())) {
+            // If it's actually not a number. //
+            if(this.isOperator(value)) {
+                // If the current value it's a operator, swap this with the last operation value. //
+                this.setLastOperation(value);
+
+            } else if(isNaN(value)) {
+
+            // In case of a new number. //
+            } else {
+                this._operation.push(value);
+            }
+            
+        } else {
+            // Parse the value to concatenate both values. //
+            let newValue = this.getLastOperation().toString() + value.toString();
+            this.setLastOperation(newValue);
+        }
         console.log(this._operation);
     }
 
@@ -55,30 +98,44 @@ class CalcController {
         this.displayCalc = "Error";
     }
 
-    // sets all buttons actions. //
+    // Sets all buttons actions. //
     execBtn(value) {
         switch(value) {
 
             case 'ac' :
                 this.clearAll();
-                break;
+            break;
+
             case 'ce' :
                 this.clearEntry();
-                break;
+            break;
+
             case 'soma' :
-                break;
+                this.addOperation('+');
+            break;
+
             case 'subtracao' :
-                break;
+                this.addOperation('-');
+            break;
+
             case 'divisao' :
-                break;
+                this.addOperation('/');
+            break;
+
             case 'multiplicacao' :
-                break;
+                this.addOperation('*');
+            break;
+
             case 'porcento' :
-                break;
+                this.addOperation('%');
+            break;
+
             case 'igual' :
-                break;
+            break;
+
             case 'ponto' :
-                break;
+                this.addOperation('.');
+            break;
             
             case '0':
             case '1':
@@ -91,19 +148,17 @@ class CalcController {
             case '8':
             case '9':
                 this.addOperation(parseInt(value));
-                break;
-
-
+            break;
         }
     }
-
-    // add events for all buttons. //
+    /////////////////////////////////
+    // Add events for all buttons. //
+    /////////////////////////////////
     initButtonsEvents() {
-        // select all 'g' tags inside id buttons and parts. //
+        // Select all 'g' tags inside id buttons and parts. //
         let buttons = document.querySelectorAll("#buttons > g, #parts > g");
 
         buttons.forEach((btn, index) => {
-
             this.addEventListenerAll(btn, 'click drag', e => {
                 // returning the class name of the current object when the same it's clicked. //
                 // notice that this replace function, removes the 'btn-' text inside each element's name. //
@@ -117,19 +172,18 @@ class CalcController {
 
                 btn.style.cursor = 'pointer';
             });
-
-
         })
-
-
     }
 
-
     setDisplayDateTime() {
-        // display current date and time
+        // Display current date and time. //
         this.displayDate = this.currentDate.toLocaleDateString(this._locale, this._dateFormtConfig);
         this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
     }
+
+    /////////////////////////
+    // Getters and Setters //
+    /////////////////////////
 
     // displayTime GET & SET // 
     get displayTime() {
@@ -158,6 +212,4 @@ class CalcController {
     get currentDate() {
         return new Date();
     }
-
-
 }
