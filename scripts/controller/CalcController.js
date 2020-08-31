@@ -19,11 +19,11 @@ class CalcController {
         // Init buttons events. //
         this.initButtonsEvents();
         // Init hour and date real-time configs. //
-    //    this.initialize();
+        this.initialize();
         // Obs.: _ means private attributes. //
     }
 
-    /*
+    
     initialize() {
 
         this.setDisplayDateTime();
@@ -32,7 +32,7 @@ class CalcController {
             this.setDisplayDateTime();
         }, 1000);
     }
-*/
+
     // Applies to the element, all needed events. //
     addEventListenerAll(element, events, fn) {
         // Split some string, using the parameter as the point of split. // 
@@ -87,9 +87,15 @@ class CalcController {
             }
             
         } else {
-            // Parse the value to concatenate both values. //
-            let newValue = this.getLastOperation().toString() + value.toString();
-            this.setLastOperation(newValue);
+            // If the current value it's a signal operator. //
+            if(this.isOperator(value)) {
+
+                this._operation.push(value);
+            } else {
+                // Parse the value to concatenate both values. //
+                let newValue = this.getLastOperation().toString() + value.toString();
+                this.setLastOperation(newValue);
+            }
         }
         console.log(this._operation);
     }
